@@ -18,16 +18,17 @@ class DirectDFA:
     def __init__(self, regex):
         self.states, self.transitions, self.alphabet = self.directConstruction(regex)
 
-    def directConstruction(self, regex):
-        regex = (
-            # "(" + regex + ")#"
-            regex + "#"
-        )
+    def directConstruction(self, tree):
+        # regex = (
+        #     # "(" + regex + ")#"
+        #     regex + "#"
+        # )
+        # regex.append('#')
         Dstates = []
         Dtransitions = []
-        tree = SyntaxTree(regex)
-        print('regex:', regex)
-        print('shutting yard:', tree.regex)
+        # tree = SyntaxTree(regex)
+        # print('regex:', regex)
+        # print('shutting yard:', tree.regex)
         language = tree.operands
         node_map = tree.render()
         Dstates.append(DirectDFAState(calc_firstpos(tree.root), False, False, True)) # store root first pos

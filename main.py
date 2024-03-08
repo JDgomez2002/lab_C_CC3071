@@ -1,42 +1,39 @@
 from syntax_tree import SyntaxTree
 from directConstruction import DirectDFA
-from render import render_nfa, render_dfa
-from regex_nfa import regex_to_nfa
-from nfa_dfa import nfa_to_dfa
-from utils import isValidExpression
+from yalexReader import *
+from regex import shunting_yard
 
-def main(regex, string):
-    print(f"--- Regex: {regex} ---")
-    if not isValidExpression(regex):
-        return
-    print(f"--- Input: {string} ---")
-    if not isValidExpression(string):
-        return
-    directDFA = DirectDFA(regex)
-    directDFA.render()
-    directDFA.run(string)
+myFile = "slr-4.yal"
 
-    # directDFA.render(True)
-    # directDFA.minimize()
-    # directDFA.run(string, True)
+definitions, rules, translatedRules, expression = yalexReader(myFile)
 
-    # tree = SyntaxTree(regex)
-    # tree.render()
+print('\n##### Definitions #####')
+for definition in definitions:
+  print(f"{definition} = {definitions[definition]}")
+  print()
 
-    # nfa = regex_to_nfa(regex)
-    # render_nfa(nfa)
-    # dfa = nfa_to_dfa(nfa)
-    # render_dfa(dfa)
+print('##### Rules #####')
+for rule in rules:
+  print(f"{rule} = {rules[rule]}")
+  print()
 
-    # nfa.run(string)
-    # dfa.run(string)
+print('##### Translated Rules #####')
+for rule in translatedRules:
+  print(f"{rule} = {translatedRules[rule]}")
+  print()
 
-    # dfa.minimize()
-    # render_dfa(dfa, "min_dfa")
-    # dfa.run(string, True)
+print('##### Expression #####')
+print(expression)
 
-if __name__ == "__main__":
-    main(
-        "(a|b)|(c|d)",
-        "b",
-    )
+postfix = shunting_yard(expression)
+print('\n##### Postfix #####')
+print(postfix)
+print()
+
+# Tree
+tree = SyntaxTree(postfix)
+tree.render()
+
+# Direct DFA
+dfa = DirectDFA(tree)
+dfa.render()

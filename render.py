@@ -11,7 +11,7 @@ def render_tree(root):
 def add_edges(graph, node, parent_id=None):
     if node is not None:
         node_id = str(id(node))
-        graph.add_node(pydotplus.Node(node_id, label=str(node), shape="circle"))
+        graph.add_node(pydotplus.Node(node_id, label=str(node.value), shape="circle"))
         if parent_id is not None:
             graph.add_edge(pydotplus.Edge(parent_id, node_id))
         add_edges(graph, node.left, node_id)
