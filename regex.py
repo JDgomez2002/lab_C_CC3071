@@ -67,6 +67,13 @@ def tokenizeRegex(regex):
 
         # chars, literals & others
         else:
+            # if the character is a dot, it must be escaped
+            # if char == ".":
+            #     if i == 0 or regex[i-1] != '\\':
+            #         raise ValueError("Dot must be escaped in regex.")
+            # elif char == "_":
+            #     tokens.append("[' '-'~']")
+            # else:
             tokens.append(char)
             i += 1
 

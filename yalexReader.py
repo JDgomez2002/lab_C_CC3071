@@ -5,6 +5,9 @@ def yalexReader(myFile: str):
   definitions = {}
   rules = {}
 
+  errors = False
+  error = ''
+
   with open(myFile, "r") as f:
     lines = f.readlines()
 
@@ -14,6 +17,12 @@ def yalexReader(myFile: str):
     for line in lines:
       if line.startswith("rule"):
         break
+
+      if '"' in line and not errors:
+        errors = True
+        error = 'Error: Invalid character: (")'
+        break
+
 
       line = line.strip()
       if line.startswith("let"):
@@ -37,13 +46,28 @@ def yalexReader(myFile: str):
 
   definitions = format_definitions(definitions)
 
+  # check if a definition is empty
+  for definition in definitions:
+    if definitions[definition].strip() == '' and not errors:
+      errors = True
+      error = 'Error: Empty definition'
+      break
+
   rules = parse_rules(myFile)
 
   translatedRules = {}
   for rule in rules:
+    if rules[rule].strip() == '' and not errors:
+      errors = True
+      error = 'Error: Empty rule'
+      break
     if rules[rule] in definitions:
       translatedRules[rule] = definitions[rules[rule]]
     else:
+      if '\\' not in rules[rule] and not errors:
+        errors = True
+        error = 'Error: Definition not defined'
+        break
       translatedRules[rule] = rules[rule]
 
   expression = ''
@@ -51,4 +75,8 @@ def yalexReader(myFile: str):
     expression += translatedRules[rule] + '|'
   expression = expression[:-1]
 
-  return definitions, rules, translatedRules, expression
+  if errors:
+    expression = ''
+    error = '\n' + error + '\n'
+
+  return definitions, rules, translatedRules, expression, errors, error
